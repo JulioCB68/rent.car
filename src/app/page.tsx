@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import Link from 'next/link'
 import Audi from '../../public/home-audi-car.svg'
 import RectangleGroup from '../../public/home-rectangle-group.svg'
 import Logo from '../../public/logo.svg'
@@ -20,7 +21,9 @@ export default function Home() {
               Vários modelos para você dirigir seguro, com conforto e segurança.
             </p>
 
-            <Button size={'3xl'}>começar agora</Button>
+            <Link href="/login">
+              <Button size={'3xl'}>começar agora</Button>
+            </Link>
           </div>
         </div>
         <div className="order-1 col-span-2 flex cursor-pointer items-center justify-center md:order-2 md:col-span-1">
