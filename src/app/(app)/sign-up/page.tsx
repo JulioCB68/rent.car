@@ -1,10 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 
-import Audi from '../../../../public/home-audi-car.svg'
 import RectangleGroup from '../../../../public/home-rectangle-group.svg'
+import Dodge from '../../../../public/sign-up-dodge-car.svg'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -16,13 +15,17 @@ import { api } from '@/lib/axios'
 import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
+  name: z.string().min(1, { message: 'Name field required' }),
   email: z.string().min(4, { message: 'E-mail field required' }),
   password: z.string().min(4, { message: 'Password field required' }),
+  confirm_password: z
+    .string()
+    .min(4, { message: 'Confirm password field required' }),
 })
 
 type FormSchema = z.infer<typeof formSchema>
 
-export default function Login() {
+export default function SignUp() {
   const route = useRouter()
   const {
     register,
@@ -32,10 +35,11 @@ export default function Login() {
     resolver: zodResolver(formSchema),
   })
 
-  async function handleLogin({ email, password }: FormSchema) {
+  async function handleLogin({ name, email, password }: FormSchema) {
     try {
       await api
-        .post('/login', {
+        .post('/register', {
+          name,
           email,
           password,
         })
@@ -46,14 +50,16 @@ export default function Login() {
   }
 
   const isFormIsEmpty: boolean = !!(
-    touchedFields.email === undefined || touchedFields.password === undefined
+    touchedFields.name === undefined ||
+    touchedFields.email === undefined ||
+    touchedFields.password === undefined
   )
 
   return (
     <div className="flex h-full w-full items-center justify-center lg:container">
       <div className="relative hidden w-full cursor-pointer items-center justify-center lg:flex">
         <Image
-          src={Audi}
+          src={Dodge}
           alt="Audi"
           width={500}
           height={500}
@@ -64,19 +70,27 @@ export default function Login() {
           alt="Rectangle group"
           width={500}
           height={500}
-          className="absolute opacity-45 grayscale"
+          className="absolute opacity-75 grayscale"
         />
       </div>
       <form onSubmit={handleSubmit(handleLogin)} className="container w-full">
         <div className="flex flex-col items-center">
-          <div className="flex h-[30rem] flex-col items-start justify-between">
+          <div className="flex h-[20rem] flex-col items-start justify-between">
             <h3 className="text-3xl font-semibold text-dark-gray">
-              Estamos quase lá.
+              Crie sua conta
             </h3>
 
             <p className="w-80 text-light-gray">
-              Faça seu login para começar uma experiência incrível.
+              Faça seu cadastro de forma rápida e fácil.
             </p>
+
+            <Input
+              type="name"
+              placeholder="Nome"
+              className="w-80 md:w-96"
+              {...register('name')}
+            />
+            {errors.name?.message && <p>{errors.name.message}</p>}
             <Input
               type="email"
               placeholder="E-mail"
@@ -92,22 +106,23 @@ export default function Login() {
             />
             {errors.password?.message && <p>{errors.password.message}</p>}
 
-            <Link href="" className="text-sm text-light-gray">
-              Esqueci minha senha
-            </Link>
+            <Input
+              type="password"
+              placeholder="Confirme sua senha"
+              className="w-80 md:w-96"
+              {...register('confirm_password')}
+            />
+            {errors.confirm_password?.message && (
+              <p>{errors.confirm_password.message}</p>
+            )}
 
             <Button
               type="submit"
               className="w-80 md:w-96"
               disabled={isSubmitting || isFormIsEmpty}
             >
-              login
+              cadastrar
             </Button>
-            <Link href="/sign-up">
-              <Button className="w-80 md:w-96" variant={'outline'}>
-                criar conta gratuita
-              </Button>
-            </Link>
           </div>
         </div>
       </form>
