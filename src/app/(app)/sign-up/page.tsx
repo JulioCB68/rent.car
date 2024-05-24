@@ -1,27 +1,39 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import RectangleGroup from '../../../../public/home-rectangle-group.svg'
 import Dodge from '../../../../public/sign-up-dodge-car.svg'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { api } from '@/lib/axios'
-import { useRouter } from 'next/navigation'
+import { signUp } from '@/services/register'
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: 'Name field required' }),
-  email: z.string().min(4, { message: 'E-mail field required' }),
-  password: z.string().min(4, { message: 'Password field required' }),
-  confirm_password: z
-    .string()
-    .min(4, { message: 'Confirm password field required' }),
-})
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: 'Campo nome obrigatório' }),
+    email: z
+      .string()
+      .min(4, { message: 'Campo e-mail obrigatório' })
+      .email('Endereço de e-mail inválido'),
+    password: z.string().min(4, { message: 'Campo senha obrigatório' }),
+    confirm_password: z
+      .string()
+      .min(4, { message: 'Campo confirmar senha obrigatório' }),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    path: ['confirm_password'],
+    message: 'As senhas não correspondem',
+  })
 
 type FormSchema = z.infer<typeof formSchema>
 
@@ -35,18 +47,21 @@ export default function SignUp() {
     resolver: zodResolver(formSchema),
   })
 
+  const {
+    mutateAsync: signUpMutation,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: signUp,
+    onSuccess: () => {
+      route.push('/app')
+    },
+  })
+
   async function handleLogin({ name, email, password }: FormSchema) {
     try {
-      await api
-        .post('/register', {
-          name,
-          email,
-          password,
-        })
-        .then(() => route.push('/app'))
-    } catch (error) {
-      console.error(error)
-    }
+      await signUpMutation({ name, email, password })
+    } catch (error) {}
   }
 
   const isFormIsEmpty: boolean = !!(
@@ -75,7 +90,7 @@ export default function SignUp() {
       </div>
       <form onSubmit={handleSubmit(handleLogin)} className="container w-full">
         <div className="flex flex-col items-center">
-          <div className="flex h-[20rem] flex-col items-start justify-between">
+          <div className="flex h-[25rem] flex-col items-start justify-between">
             <h3 className="text-3xl font-semibold text-dark-gray">
               Crie sua conta
             </h3>
@@ -91,6 +106,7 @@ export default function SignUp() {
               {...register('name')}
             />
             {errors.name?.message && <p>{errors.name.message}</p>}
+
             <Input
               type="email"
               placeholder="E-mail"
@@ -98,6 +114,7 @@ export default function SignUp() {
               {...register('email')}
             />
             {errors.email?.message && <p>{errors.email.message}</p>}
+
             <Input
               type="password"
               placeholder="Senha"
@@ -112,19 +129,39 @@ export default function SignUp() {
               className="w-80 md:w-96"
               {...register('confirm_password')}
             />
+
             {errors.confirm_password?.message && (
               <p>{errors.confirm_password.message}</p>
             )}
 
-            <Button
-              type="submit"
-              className="w-80 md:w-96"
-              disabled={isSubmitting || isFormIsEmpty}
-            >
-              cadastrar
-            </Button>
+            <div>
+              <Button
+                type="submit"
+                className="mb-3 w-80 md:w-96"
+                disabled={isSubmitting || isFormIsEmpty}
+              >
+                cadastrar
+              </Button>
+              <Link href="/login">
+                <Button className="w-80 md:w-96" variant={'outline'}>
+                  voltar
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
+        {isError && (
+          <div className="mt-10">
+            <Alert variant={'destructive'} className="w-80 md:w-96">
+              <AlertTitle className="pb-1">
+                {error instanceof AxiosError && error?.response?.data?.error}
+              </AlertTitle>
+              <AlertDescription>
+                {error instanceof AxiosError && error?.response?.data?.message}
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
       </form>
     </div>
   )

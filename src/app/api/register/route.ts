@@ -1,32 +1,47 @@
+import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
-import { prisma } from '@/lib/prisma'
-
 export async function POST(request: Request) {
-  const data = await request.json()
+  try {
+    const { name, email, password } = await request.json()
 
-  const userExists = await prisma.user.findUnique({
-    where: {
-      email: data.email,
-    },
-  })
-
-  if (userExists) {
-    return new NextResponse('E-mail already exist.', {
-      status: 400,
+    const userExists = await prisma.user.findUnique({
+      where: {
+        email,
+      },
     })
+
+    if (userExists) {
+      return NextResponse.json(
+        {
+          error: 'Cadastro não realizado!',
+          message: 'Endereço de e-mail já é utilizado.',
+        },
+        { status: 400 },
+      )
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+      },
+    })
+
+    return new NextResponse(JSON.stringify(user), {
+      status: 200,
+      headers: { 'Set-Cookie': `@rentcar:userId=${user.id}` },
+    })
+  } catch (error) {
+    console.error('Erro ao processar cadastro:', error)
+    return NextResponse.json(
+      {
+        error: 'Erro no servidor',
+        message:
+          'Ocorreu um erro no servidor. Por favor, tente novamente mais tarde.',
+      },
+      { status: 500 },
+    )
   }
-
-  const user = await prisma.user.create({
-    data: {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    },
-  })
-
-  return new NextResponse(JSON.stringify(user), {
-    status: 201,
-    headers: { 'Set-Cookie': `@rentcar:userId=${user.id}` },
-  })
 }
