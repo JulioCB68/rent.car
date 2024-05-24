@@ -17,3 +17,21 @@ model User {
 
   @@map("users")
 }
+
+model Car {
+  id          String  @id @default(uuid())
+  model       String
+  name        String
+  description String
+  price       Decimal
+  imageUrl    String
+
+  speed       Int
+  up          Int
+  type        String
+  typeCambium String
+  capacity    Int
+  strength    String
+
+  @@map("cars")
+}
