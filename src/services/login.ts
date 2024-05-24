@@ -1,5 +1,4 @@
 import { api } from '@/lib/axios'
-
 interface SignInBody {
   email: string
   password: string

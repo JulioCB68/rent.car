@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: 'Cadastro não realizado!',
-          message: 'Endereço de e-mail já é utilizado.',
+          message: 'Endereço de e-mail utilizado.',
         },
         { status: 400 },
       )
@@ -29,10 +29,13 @@ export async function POST(request: Request) {
       },
     })
 
-    return new NextResponse(JSON.stringify(user), {
-      status: 200,
-      headers: { 'Set-Cookie': `@rentcar:userId=${user.id}` },
+    const response = NextResponse.json(user, { status: 201 })
+    response.cookies.set('@rentcar:userId', user.id, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7,
     })
+    return response
   } catch (error) {
     console.error('Erro ao processar cadastro:', error)
     return NextResponse.json(

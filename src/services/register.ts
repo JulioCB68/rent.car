@@ -1,5 +1,4 @@
 import { api } from '@/lib/axios'
-
 interface SignUpBody {
   name: string
   email: string

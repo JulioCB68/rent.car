@@ -34,10 +34,13 @@ export async function POST(request: Request) {
       )
     }
 
-    return new NextResponse(JSON.stringify(user), {
-      status: 200,
-      headers: { 'Set-Cookie': `@rentcar:userId=${user.id}` },
+    const response = NextResponse.json(user, { status: 200 })
+    response.cookies.set('@rentcar:userId', user.id, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7,
     })
+    return response
   } catch (error) {
     console.error('Erro ao processar login:', error)
     return NextResponse.json(
