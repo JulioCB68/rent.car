@@ -6,13 +6,11 @@ async function seedDatabase() {
   try {
     const imagesUrl = [
       'https://utfs.io/f/a6e77633-56c8-4c14-9950-dc819ccf801d-17zdl.svg',
-      'https://utfs.io/f/fa1c81b9-1341-4567-9f8f-f53a6645a875-vee837.svg',
-      'https://utfs.io/f/ecfe86c7-a0b7-46ef-afcb-9f375e6795c1-xicdzd.svg',
-      'https://utfs.io/f/d9ba7101-6db0-4918-b33d-d5c8c0c8f4cf-17km2t.svg',
       'https://utfs.io/f/48a95837-022a-48bc-94b1-aeb1fbaa4da6-wubmh2.svg',
+      'https://utfs.io/f/fa1c81b9-1341-4567-9f8f-f53a6645a875-vee837.svg',
+      'https://utfs.io/f/d9ba7101-6db0-4918-b33d-d5c8c0c8f4cf-17km2t.svg',
       'https://utfs.io/f/ba3e76e3-e2da-4ab4-8448-550632f5b37f-1dbhkc.svg',
-      'https://utfs.io/f/7ea89fe4-19c8-4d3e-8df0-9b05e859dffe-d5czwk.svg',
-      'https://utfs.io/f/3a0aa775-a0e0-4a84-a004-7a6eac10da8c-l00mb2.svg',
+      'https://utfs.io/f/ecfe86c7-a0b7-46ef-afcb-9f375e6795c1-xicdzd.svg',
     ]
 
     // Nomes dos modelos
@@ -23,8 +21,6 @@ async function seedDatabase() {
       'Huracan',
       'XC40',
       'Lancer Evo X',
-      'Q3',
-      'Charger',
     ]
 
     // Nomes das marcas
@@ -35,7 +31,6 @@ async function seedDatabase() {
       'Lamborghini',
       'Volvo',
       'Lancer',
-      'Mitsubishi',
     ]
 
     // Tipos de motor
@@ -128,34 +123,6 @@ async function seedDatabase() {
         typeCambium: Cambiumtype[0],
         capacity: 5,
         strength: '320',
-      },
-      {
-        name: brands[6],
-        model: model[6],
-        description:
-          'Este é automóvel desportivo. Surgiu do lendário touro de lide indultado na praça Real Maestranza de Sevilla. É um belíssimo carro para quem gosta de acelerar.',
-        price: 900,
-        imageUrl: imagesUrl[6],
-        speed: 270,
-        up: 7,
-        type: motorTypes[0],
-        typeCambium: Cambiumtype[1],
-        capacity: 5,
-        strength: '280',
-      },
-      {
-        name: brands[7],
-        model: model[7],
-        description:
-          'Este é automóvel desportivo. Surgiu do lendário touro de lide indultado na praça Real Maestranza de Sevilla. É um belíssimo carro para quem gosta de acelerar.',
-        price: 750,
-        imageUrl: imagesUrl[7],
-        speed: 340,
-        up: 8,
-        type: motorTypes[0],
-        typeCambium: Cambiumtype[1],
-        capacity: 5,
-        strength: '350',
       },
     ]
 

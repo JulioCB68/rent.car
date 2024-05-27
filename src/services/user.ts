@@ -10,6 +10,5 @@ interface UserData {
 
 export async function getUser(): Promise<UserData> {
   const response = await api.get('/user')
-  console.log(response)
   return response.data
 }

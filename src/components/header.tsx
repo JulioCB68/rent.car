@@ -13,12 +13,16 @@ export default function Header() {
 
   return (
     <header className="flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-20">
-      <h1>
-        Olá, <strong>{user?.name}</strong>
-      </h1>
-      <Button className="gap-2">
-        <LogOut className="size-5" />
-      </Button>
+      {!!user && (
+        <>
+          <h1>
+            Olá, <strong>{user?.name}</strong>
+          </h1>
+          <Button className="gap-2">
+            <LogOut className="size-5" />
+          </Button>
+        </>
+      )}
     </header>
   )
 }

@@ -11,8 +11,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="grid min-h-screen w-full md:grid-cols-[80px_1fr]">
-          <div className="hidden border-r bg-muted/40 md:block">
+        <div className="grid min-h-screen w-full lg:grid-cols-[80px_1fr]">
+          <div className="hidden border-r bg-muted/40 lg:block">
             <div className="flex h-full max-h-screen flex-col">
               <div className="flex h-14 items-center justify-center bg-red px-4 text-white lg:h-[60px] lg:px-6">
                 <Package2 className="size-6" />
@@ -32,7 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex w-full flex-col">
             <Header />
             <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:px-24">
               {children}

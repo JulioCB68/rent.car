@@ -54,6 +54,9 @@ const config = {
         },
         'light-gray': '#7A7A80',
         'dark-gray': '#41414D',
+        title: '#1B1B1F',
+        details: '#AEAEB3',
+        red: '#DC1637',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -87,6 +90,17 @@ const config = {
       borderColor: {
         gray: '#AEAEB3',
         red: '#DC1637',
+      },
+      gridTemplateColumns: {
+        tableMd: 'repeat(2, minmax(22.5rem, 1fr))',
+        table2Xl: 'repeat(3, minmax(22.5rem, 1fr))',
+        table3Xl: 'repeat(4, minmax(22.5rem, 1fr))',
+        table4Xl: 'repeat(5, minmax(22.5rem, 1fr))',
+      },
+      screens: {
+        '2xl': '1380px',
+        '3xl': '1750px',
+        '4xl': '2300px',
       },
     },
   },
