@@ -79,6 +79,7 @@ const config = {
       },
       backgroundColor: {
         'bg-background': '#1B1B1F',
+        'background-gray': '#F4F5F6',
         shape: '#29292E',
         red: '#DC1637',
         green: '#03B252',

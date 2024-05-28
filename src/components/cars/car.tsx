@@ -6,6 +6,7 @@ import { archivo } from '@/config/font'
 
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CarsData } from '@/services/cars'
+import Link from 'next/link'
 import { getFuelType } from './helpers'
 
 interface ICarProps {
@@ -18,15 +19,17 @@ export default function Car({ data }: ICarProps) {
       className={`${archivo.className} w-full min-w-80 rounded-sm shadow-md`}
     >
       <CardHeader className="flex items-center border-b">
-        <CardTitle className="h-[80px] cursor-pointer">
-          <Image
-            src={data.imageUrl}
-            alt="Car"
-            width={300}
-            height={300}
-            className="w-full bg-cover"
-          />
-        </CardTitle>
+        <Link href={`/app/car/${data.id}`}>
+          <CardTitle className="h-[80px] cursor-pointer">
+            <Image
+              src={data.imageUrl}
+              alt="Car"
+              width={300}
+              height={300}
+              className="w-full bg-cover"
+            />
+          </CardTitle>
+        </Link>
       </CardHeader>
       <CardFooter className="flex w-full items-center justify-between p-4">
         <div className="flex items-center justify-between gap-8 whitespace-nowrap">
@@ -39,7 +42,7 @@ export default function Car({ data }: ICarProps) {
             <p className="text-xl font-medium text-red">R$ {data.price}</p>
           </div>
         </div>
-        <div className="w- flex items-center justify-center">
+        <div className="flex items-center justify-center text-[#AEAEB3]">
           {getFuelType(data.type)}
         </div>
       </CardFooter>

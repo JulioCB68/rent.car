@@ -1,19 +1,18 @@
 import { cookies } from 'next/headers'
 import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const cookie = cookies()
   const userCookie = cookie.get('@rentcar:userId')
 
-  if (pathname === '/app' && !userCookie) {
-    return NextResponse.rewrite(new URL('/login', request.url))
-  }
+  // if (pathname === '/app' && !userCookie) {
+  //   return NextResponse.rewrite(new URL('/login', request.url))
+  // }
 
-  if ((pathname === '/login' || pathname === '/sign-up') && userCookie) {
-    return NextResponse.rewrite(new URL('/app', request.url))
-  }
+  // if ((pathname === '/login' || pathname === '/sign-up') && userCookie) {
+  //   return NextResponse.rewrite(new URL('/app', request.url))
+  // }
 }
 
 export const config = {

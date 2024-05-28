@@ -25,3 +25,8 @@ export async function getCars(): Promise<CarsData[]> {
   const response = await api.get('/cars')
   return response.data
 }
+
+export async function getCarPerId(id: string): Promise<CarsData> {
+  const response = await api.get(`/car/${id}`)
+  return response.data
+}

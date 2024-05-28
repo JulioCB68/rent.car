@@ -1,45 +1,46 @@
-import Image from 'next/image'
 import { ReactNode } from 'react'
 
 import { FuelType } from '@/services/cars'
 
-import Energia from '../../../public/Energia.svg'
-import Gasolina from '../../../public/Gasolina.svg'
-import Hibrido from '../../../public/Hibrido.svg'
+import { Droplet, Leaf, Zap } from 'lucide-react'
 
-export function getFuelType(fuelType: FuelType): ReactNode {
+export function getFuelType(fuelType: FuelType | undefined): ReactNode {
+  const commonProps = {
+    width: 28,
+    height: 28,
+  }
+
   switch (fuelType) {
     case FuelType.Gasolina:
-      return (
-        <Image
-          src={Gasolina}
-          alt={FuelType.Gasolina}
-          width={300}
-          height={300}
-          className="w-full bg-cover"
-        />
-      )
+      return <Droplet {...commonProps} />
     case FuelType.Hibrido:
-      return (
-        <Image
-          src={Hibrido}
-          alt={FuelType.Hibrido}
-          width={300}
-          height={300}
-          className="w-full bg-cover"
-        />
-      )
+      return <Leaf {...commonProps} />
     case FuelType.Eletrico:
-      return (
-        <Image
-          src={Energia}
-          alt={FuelType.Eletrico}
-          width={300}
-          height={300}
-          className="w-full bg-cover"
-        />
-      )
+      return <Zap {...commonProps} />
     default:
       return null
   }
+}
+
+export const detailUnits = {
+  speed: 'km/h',
+  up: 's',
+  strength: ' HP',
+  capacity: ' pessoas',
+} as const
+
+type UnitKeys = keyof typeof detailUnits
+
+interface UnitFlags {
+  speed?: boolean
+  up?: boolean
+  strength?: boolean
+  capacity?: boolean
+}
+
+export function getUnits(unitFlags: UnitFlags): string {
+  return Object.keys(unitFlags)
+    .filter((key) => unitFlags[key as UnitKeys])
+    .map((key) => detailUnits[key as UnitKeys])
+    .join('')
 }
