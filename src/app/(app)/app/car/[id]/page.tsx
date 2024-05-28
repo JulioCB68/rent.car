@@ -19,6 +19,7 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel'
 
+import Tab from '@/components/cars/tab'
 import {
   ArrowUpFromLine,
   ChevronLeft,
@@ -81,7 +82,7 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           </Carousel>
         </div>
       </div>
-      <div className="order-3 mt-16 md:w-1/2">
+      <div className="order-3 mt-16 w-full md:w-1/2">
         <div className="mt-6 grid w-full grid-cols-2 gap-3">
           <Detail icon={<Gauge />} text={car?.speed} speed />
           <Detail icon={<ArrowUpFromLine />} text={car?.up} up />
@@ -101,10 +102,10 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           />
           <Detail icon={<User />} text={car?.capacity} capacity />
         </div>
-        <p className="mt-12 text-sm leading-6 text-light-gray">
-          {car?.description}
-        </p>
-        <Button size={'2xl'} className="order-5 mt-12 w-full">
+        <div className="my-16">
+          <Tab description={car?.description} />
+        </div>
+        <Button size={'2xl'} className="order-5 w-full">
           Escolher período do aluguel
         </Button>
       </div>

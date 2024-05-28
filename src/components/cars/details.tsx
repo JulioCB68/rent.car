@@ -22,7 +22,7 @@ export default function Detail({
 
   return (
     <div>
-      <div className="col-span-1 flex w-full cursor-pointer flex-col items-center justify-center whitespace-nowrap bg-background-gray p-8 shadow-md md:hidden">
+      <div className="col-span-1 flex max-h-24 min-h-24 w-full cursor-pointer flex-col items-center justify-center whitespace-nowrap bg-background-gray p-6 shadow-md md:hidden">
         <div>{icon}</div>
         <p className="pt-4 text-xs">
           {text}
