@@ -44,3 +44,25 @@ export function getUnits(unitFlags: UnitFlags): string {
     .map((key) => detailUnits[key as UnitKeys])
     .join('')
 }
+
+export function formatData(dataString: string): string {
+  const meses = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ]
+
+  const data = new Date(dataString)
+  const dia = data.getDate() < 10 ? `0${data.getDate()}` : data.getDate()
+  const mes = meses[data.getMonth()]
+  return `${dia} de ${mes}`
+}

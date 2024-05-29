@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import Detail from '@/components/cars/details'
 import { getFuelType } from '@/components/cars/helpers'
+import Tab from '@/components/cars/tab'
 import { Button } from '@/components/ui/button'
 import {
   Carousel,
@@ -18,8 +19,9 @@ import {
   CarouselDots,
   CarouselItem,
 } from '@/components/ui/carousel'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 
-import Tab from '@/components/cars/tab'
+import RangeDatePicker from '@/components/cars/range-date-picker'
 import {
   ArrowUpFromLine,
   ChevronLeft,
@@ -105,9 +107,16 @@ export default function CarDetails({ params }: { params: { id: string } }) {
         <div className="my-16">
           <Tab description={car?.description} />
         </div>
-        <Button size={'2xl'} className="order-5 w-full">
-          Escolher período do aluguel
-        </Button>
+        <Dialog modal={true}>
+          <DialogTrigger asChild>
+            <Button size={'2xl'} className="order-5 w-full">
+              Escolher período do aluguel
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[46rem]">
+            <RangeDatePicker />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )
