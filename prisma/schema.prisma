@@ -13,7 +13,8 @@ model User {
   email    String @unique
   password String
 
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  Booking    Booking[]
 
   @@map("users")
 }
@@ -32,6 +33,21 @@ model Car {
   typeCambium String
   capacity    Int
   strength    String
+  Booking     Booking[]
 
   @@map("cars")
+}
+
+model Booking {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  carId String
+  car   Car    @relation(fields: [carId], references: [id])
+
+  date DateTime
+
+  @@map("bookings")
 }
