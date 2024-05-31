@@ -29,12 +29,19 @@ import {
   LifeBuoy,
   User,
 } from 'lucide-react'
+import { useState } from 'react'
 
 export default function CarDetails({ params }: { params: { id: string } }) {
+  const [open, setOpen] = useState(false)
+
   const { data: car } = useQuery({
     queryKey: ['get-car', params.id],
     queryFn: () => getCarPerId(params.id),
   })
+
+  const handleFormSubmit = () => {
+    setOpen(false)
+  }
 
   return (
     <div className="flex w-full flex-col items-start justify-start px-3 md:mt-6 md:flex-row md:px-0 lg:mx-auto lg:max-w-7xl">
@@ -107,14 +114,17 @@ export default function CarDetails({ params }: { params: { id: string } }) {
         <div className="my-16">
           <Tab description={car?.description} />
         </div>
-        <Dialog modal={true}>
+        <Dialog modal={true} open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size={'2xl'} className="order-5 w-full">
               Escolher período do aluguel
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-[46rem]">
-            <RangeDatePicker />
+            <RangeDatePicker
+              carId={params.id}
+              onFormSubmit={handleFormSubmit}
+            />
           </DialogContent>
         </Dialog>
       </div>

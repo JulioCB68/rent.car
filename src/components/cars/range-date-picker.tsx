@@ -3,7 +3,9 @@
 import { Controller, useForm } from 'react-hook-form'
 
 import { Calendar } from '@/components/ui/calendar'
+import { addBooking } from '@/services/booking'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
 import { Button } from '../ui/button'
 import { formatData } from './helpers'
@@ -17,7 +19,15 @@ const bookingFormSchema = z.object({
 
 type BookingFormSchema = z.infer<typeof bookingFormSchema>
 
-export default function RangeDatePicker() {
+interface IRangeDatePickerProps {
+  carId: string
+  onFormSubmit: () => void
+}
+
+export default function RangeDatePicker({
+  carId,
+  onFormSubmit,
+}: IRangeDatePickerProps) {
   const { control, handleSubmit, watch } = useForm<BookingFormSchema>({
     resolver: zodResolver(bookingFormSchema),
   })
@@ -25,11 +35,24 @@ export default function RangeDatePicker() {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const onSubmit = ({ dateRange: { from, to } }: BookingFormSchema) => {}
+  const { mutateAsync: CreateBookingMutation } = useMutation({
+    mutationFn: addBooking,
+    onSuccess: () => {
+      onFormSubmit()
+    },
+  })
+
+  async function onSubmit({ dateRange: { from, to } }: BookingFormSchema) {
+    try {
+      await CreateBookingMutation({
+        startDate: from,
+        endDate: to,
+        carId,
+      })
+    } catch (error) {}
+  }
 
   const date = watch('dateRange')
-
-  console.log(date)
 
   return (
     <form
