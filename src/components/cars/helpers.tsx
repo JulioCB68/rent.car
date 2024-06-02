@@ -45,8 +45,8 @@ export function getUnits(unitFlags: UnitFlags): string {
     .join('')
 }
 
-export function formatData(dataString: string): string {
-  const meses = [
+export function formatDate(dataString: string): string {
+  const mounths = [
     'Janeiro',
     'Fevereiro',
     'Março',
@@ -61,8 +61,33 @@ export function formatData(dataString: string): string {
     'Dezembro',
   ]
 
-  const data = new Date(dataString)
-  const dia = data.getDate() < 10 ? `0${data.getDate()}` : data.getDate()
-  const mes = meses[data.getMonth()]
-  return `${dia} de ${mes}`
+  const date = new Date(dataString)
+  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+  const mounth = mounths[date.getMonth()]
+  const year = date.getFullYear()
+  return `${day} de ${mounth} ${year}`
+}
+
+interface IRentCalculation {
+  totalRent: number
+  totalDays: number
+}
+
+export function calculateRentAndDays(
+  dailyRate: number,
+  startDate: string,
+  endDate: string,
+): IRentCalculation {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+
+  const diffInMs = end.getTime() - start.getTime()
+  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24) + 1)
+
+  const totalRent = diffInDays * dailyRate
+
+  return {
+    totalRent,
+    totalDays: diffInDays,
+  }
 }

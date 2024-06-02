@@ -57,6 +57,7 @@ const config = {
         title: '#1B1B1F',
         details: '#AEAEB3',
         red: '#DC1637',
+        green: '#03B252',
       },
       borderRadius: {
         lg: 'var(--radius)',

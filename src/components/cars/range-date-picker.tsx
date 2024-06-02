@@ -1,14 +1,14 @@
 'use client'
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { Calendar } from '@/components/ui/calendar'
-import { addBooking } from '@/services/booking'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { z } from 'zod'
 import { Button } from '../ui/button'
-import { formatData } from './helpers'
+import { formatDate } from './helpers'
 
 const bookingFormSchema = z.object({
   dateRange: z.object({
@@ -20,36 +20,37 @@ const bookingFormSchema = z.object({
 type BookingFormSchema = z.infer<typeof bookingFormSchema>
 
 interface IRangeDatePickerProps {
-  carId: string
-  onFormSubmit: () => void
+  closeModal: () => void
 }
 
-export default function RangeDatePicker({
-  carId,
-  onFormSubmit,
-}: IRangeDatePickerProps) {
-  const { control, handleSubmit, watch } = useForm<BookingFormSchema>({
-    resolver: zodResolver(bookingFormSchema),
-  })
+export default function RangeDatePicker({ closeModal }: IRangeDatePickerProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const params = new URLSearchParams(searchParams.toString())
+
+  const startDate = searchParams.get('startDate')
+  const endDate = searchParams.get('endDate')
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const { mutateAsync: CreateBookingMutation } = useMutation({
-    mutationFn: addBooking,
-    onSuccess: () => {
-      onFormSubmit()
+  const { control, handleSubmit, watch } = useForm<BookingFormSchema>({
+    resolver: zodResolver(bookingFormSchema),
+    defaultValues: {
+      dateRange: {
+        from: startDate ? new Date(startDate) : undefined,
+        to: endDate ? new Date(endDate) : undefined,
+      },
     },
   })
 
   async function onSubmit({ dateRange: { from, to } }: BookingFormSchema) {
-    try {
-      await CreateBookingMutation({
-        startDate: from,
-        endDate: to,
-        carId,
-      })
-    } catch (error) {}
+    params.set('startDate', from.toISOString())
+    params.set('endDate', to.toISOString())
+
+    router.push(`${pathname}?${params}`)
+    closeModal()
   }
 
   const date = watch('dateRange')
@@ -78,7 +79,7 @@ export default function RangeDatePicker({
             De
           </label>
           <p className="mb-8 w-full border-b-2">
-            {date?.from ? formatData(String(date?.from)) : ''}
+            {date?.from ? formatDate(String(date?.from)) : ''}
           </p>
           <div className="w-full">
             <label htmlFor="" className="text-xs uppercase text-light-gray">
@@ -86,7 +87,7 @@ export default function RangeDatePicker({
             </label>
             <div className="mb-8 w-full border-b-2">
               <p>
-                {date?.to !== undefined ? formatData(String(date?.to)) : ''}
+                {date?.to !== undefined ? formatDate(String(date?.to)) : ''}
               </p>
             </div>
           </div>

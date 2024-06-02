@@ -2,12 +2,14 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 import Cambio from '../../../../../../public/Câmbio.svg'
 
 import { archivo } from '@/config/font'
 import { getCarPerId } from '@/services/cars'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import Detail from '@/components/cars/details'
 import { getFuelType } from '@/components/cars/helpers'
@@ -22,6 +24,7 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 
 import RangeDatePicker from '@/components/cars/range-date-picker'
+import { addBooking } from '@/services/booking'
 import {
   ArrowUpFromLine,
   ChevronLeft,
@@ -29,9 +32,9 @@ import {
   LifeBuoy,
   User,
 } from 'lucide-react'
-import { useState } from 'react'
 
 export default function CarDetails({ params }: { params: { id: string } }) {
+  const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
 
   const { data: car } = useQuery({
@@ -39,8 +42,23 @@ export default function CarDetails({ params }: { params: { id: string } }) {
     queryFn: () => getCarPerId(params.id),
   })
 
-  const handleFormSubmit = () => {
+  const { mutateAsync: CreateBookingMutation } = useMutation({
+    mutationFn: addBooking,
+  })
+
+  function handleOpenModal() {
     setOpen(false)
+  }
+
+  const startDate = searchParams.get('startDate')
+  const endDate = searchParams.get('endDate')
+
+  async function handleAddBooking() {
+    await CreateBookingMutation({
+      startDate: new Date(startDate as string),
+      endDate: new Date(endDate as string),
+      carId: params.id,
+    })
   }
 
   return (
@@ -112,21 +130,30 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           <Detail icon={<User />} text={car?.capacity} capacity />
         </div>
         <div className="my-16">
-          <Tab description={car?.description} />
+          <Tab description={car?.description} price={car?.price} />
         </div>
-        <Dialog modal={true} open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size={'2xl'} className="order-5 w-full">
-              Escolher período do aluguel
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[46rem]">
-            <RangeDatePicker
-              carId={params.id}
-              onFormSubmit={handleFormSubmit}
-            />
-          </DialogContent>
-        </Dialog>
+        {!startDate && !endDate && (
+          <Dialog modal={true} open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size={'2xl'} className="order-5 w-full">
+                Escolher período do aluguel
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[46rem]">
+              <RangeDatePicker closeModal={handleOpenModal} />
+            </DialogContent>
+          </Dialog>
+        )}
+        {startDate && endDate && (
+          <Button
+            size={'2xl'}
+            variant={'secondary'}
+            className="order-5 w-full"
+            onClick={handleAddBooking}
+          >
+            alugar agora
+          </Button>
+        )}
       </div>
     </div>
   )
